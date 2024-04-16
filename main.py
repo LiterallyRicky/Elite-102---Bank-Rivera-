@@ -7,20 +7,7 @@ connection = mysql.connector.connect(
     password='Alex.0429'
 )
 
-# End
-
 # Creating Functions
-def main_menu():
-    print("Welcome to our application!")
-    print("Main Menu:")
-    print("1. Create an account")
-    print("2. Delete an account")
-    print("3. Modify an account")
-    print("4. Deposit an amount into an account")
-    print("5. Withdrawl an amount from an account")
-
-if __name__ == "__main__":
-    main_menu()
 
 def create_account():
     user_id = int(input("Enter in a 5 number account number: "))
@@ -42,9 +29,6 @@ def create_account():
     connection.commit()
     cursor.close()
 
-# Call the function to create an account
-create_account()
-
 def delete_account():
     # Get user ID of the account to be deleted
     user_id = int(input("Enter account number of the account to be deleted: "))
@@ -63,9 +47,6 @@ def delete_account():
     # Close cursor and connection
     cursor.close()
 
-# Call the function to delete an account
-delete_account()
-
 def modify_account():
     # Get user ID of the account to be modified
     user_id = int(input("Enter account number of the account to be modified: "))
@@ -78,7 +59,7 @@ def modify_account():
 
     # Execute SQL query to update account information
     cursor = connection.cursor()
-    sql = "UPDATE create_account SET 'Username' = %s, 'Password' = %s, 'Email' = %s, 'Pin' = %s WHERE 'User ID' = %s"
+    sql = "UPDATE create_account SET `Username` = %s, `Password` = %s, `Email` = %s, `Pin` = %s WHERE `User ID` = %s"
     val = (new_username, new_password, new_email, new_pin, user_id)
     cursor.execute(sql, val)
 
@@ -90,11 +71,6 @@ def modify_account():
 
     # Close cursor and connection
     cursor.close()
-
-# Call the function to modify account information
-modify_account()
-
-#User makes the choice of which option
 
 def deposit():
     # Get user ID and amount to deposit
@@ -120,9 +96,6 @@ def deposit():
 
     # Close cursor and connection
     cursor.close()
-
-# Call the function to deposit money into the account
-deposit()
 
 def withdraw():
     # Get user ID and amount to deposit
@@ -153,5 +126,37 @@ def withdraw():
     # Close cursor and connection
     cursor.close()
 
-# Call the function to withdraw money from the account
-withdraw()
+def main_menu():
+    print("Welcome to our application!")
+    print("Main Menu:")
+    print("1. Create an account")
+    print("2. Delete an account")
+    print("3. Modify an account")
+    print("4. Deposit an amount into an account")
+    print("5. Withdraw an amount from an account")
+    print("6. Exit the app")
+
+    # Prompt user for choice
+    choice = input("Enter your choice (1-6): ")
+
+    # Call corresponding function based on user's choice
+    if choice == '1':
+        create_account()
+    elif choice == '2':
+        delete_account()
+    elif choice == '3':
+        modify_account()
+    elif choice == '4':
+        deposit()
+    elif choice == '5':
+        withdraw()
+    elif choice == '6':
+        print("Exiting the application. Goodbye!")
+        # Close the database connection before exiting
+        connection.close()
+        exit()
+    else:
+        print("Invalid choice. Please enter a number from 1 to 6.")
+
+if __name__ == "__main__":
+    main_menu()
