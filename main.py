@@ -19,7 +19,7 @@ def create_account():
 
     # Execute SQL query to insert new account details
     cursor = connection.cursor()
-    sql = "INSERT INTO create_account (`User ID`, `Pin`, `Username`, `Password`, `Creation Date`, `Email`) VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO create_account ('User ID', 'Pin', 'Username', 'Password', 'Creation Date', 'Email') VALUES (%s, %s, %s, %s, %s, %s)"
     val = (user_id, pin, username, password, creation_date, email)
     cursor.execute(sql, val)
 
@@ -35,7 +35,7 @@ def delete_account():
 
     # Execute SQL query to delete the account
     cursor = connection.cursor()
-    sql = "DELETE FROM create_account WHERE `User ID` = %s"
+    sql = "DELETE FROM create_account WHERE 'User ID' = %s"
     cursor.execute(sql, (user_id,))
 
     if cursor.rowcount > 0:
