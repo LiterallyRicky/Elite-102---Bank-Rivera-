@@ -32,8 +32,8 @@ def create_account():
 
     # Execute SQL query to insert new account details
     cursor = connection.cursor()
-    sql = "INSERT INTO create_account (`User ID`, `Username`, `Password`, `Creation Date`, `Email`, `Pin`) VALUES (%s, %s, %s, %s, %s, %s)"
-    val = (user_id, username, password, creation_date, email, pin)
+    sql = "INSERT INTO create_account (`User ID`, `Pin`, `Username`, `Password`, `Creation Date`, `Email`) VALUES (%s, %s, %s, %s, %s, %s)"
+    val = (user_id, pin, username, password, creation_date, email)
     cursor.execute(sql, val)
 
     print("Account created successfully!")
@@ -41,7 +41,6 @@ def create_account():
     # Commit and close
     connection.commit()
     cursor.close()
-    connection.close()
 
 # Call the function to create an account
 create_account()
@@ -96,3 +95,63 @@ def modify_account():
 modify_account()
 
 #User makes the choice of which option
+
+def deposit():
+    # Get user ID and amount to deposit
+    user_id = int(input("Enter account number: "))
+    amount = float(input("Enter amount to deposit: "))
+
+    # Execute SQL query to update account balance
+    cursor = connection.cursor()
+    sql_select = "SELECT balance FROM create_account WHERE `User ID` = %s"
+    cursor.execute(sql_select, (user_id,))
+    result = cursor.fetchone()
+
+    if result:
+        current_balance = result[0]
+        new_balance = current_balance + amount
+        sql_update = "UPDATE create_account SET balance = %s WHERE `User ID` = %s"
+        val = (new_balance, user_id)
+        cursor.execute(sql_update, val)
+        connection.commit()
+        print("Deposit successful. New balance: {:.2f}".format(new_balance))
+    else:
+        print("Account with the specified user ID does not exist.")
+
+    # Close cursor and connection
+    cursor.close()
+
+# Call the function to deposit money into the account
+deposit()
+
+def withdraw():
+    # Get user ID and amount to deposit
+    user_id = int(input("Enter account number: "))
+    amount = float(input("Enter amount to withdraw: "))
+
+    # Execute SQL query to update account balance
+    cursor = connection.cursor()
+    sql_select = "SELECT balance FROM create_account WHERE `User ID` = %s"
+    cursor.execute(sql_select, (user_id,))
+    result = cursor.fetchone()
+
+    if result:
+        current_balance = result[0]
+        if current_balance >= amount:
+            new_balance = current_balance - amount
+            # Execute SQL query to update account balance
+            sql_update = "UPDATE create_account SET balance = %s WHERE `User ID` = %s"
+            val = (new_balance, user_id)
+            cursor.execute(sql_update, val)
+            connection.commit()
+            print("Withdrawal successful. New balance: {:.2f}".format(new_balance))
+        else:
+            print("Insufficient funds.")
+    else:
+        print("Account with the specified user ID does not exist.")
+
+    # Close cursor and connection
+    cursor.close()
+
+# Call the function to withdraw money from the account
+withdraw()
