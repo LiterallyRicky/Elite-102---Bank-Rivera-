@@ -19,7 +19,7 @@ def create_account():
 
     # Execute SQL query to insert new account details
     cursor = connection.cursor()
-    sql = "INSERT INTO create_account ('User ID', 'Pin', 'Username', 'Password', 'Creation Date', 'Email') VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO create_account (`User ID`, `Pin`, `Username`, `Password`, `Creation Date`, `Email`) VALUES (%s, %s, %s, %s, %s, %s)"
     val = (user_id, pin, username, password, creation_date, email)
     cursor.execute(sql, val)
 
@@ -35,14 +35,14 @@ def delete_account():
 
     # Execute SQL query to delete the account
     cursor = connection.cursor()
-    sql = "DELETE FROM create_account WHERE 'User ID' = %s"
+    sql = "DELETE FROM create_account WHERE `User ID` = %s"
     cursor.execute(sql, (user_id,))
 
     if cursor.rowcount > 0:
         print("Account deleted successfully!")
         connection.commit()
     else:
-        print("Account with the specified user ID does not exist.")
+        print("Account with the specified account number does not exist.")
 
     # Close cursor and connection
     cursor.close()
@@ -67,7 +67,7 @@ def modify_account():
         print("Account information updated successfully!")
         connection.commit()
     else:
-        print("Account with the specified user ID does not exist.")
+        print("Account with the specified account number does not exist.")
 
     # Close cursor and connection
     cursor.close()
@@ -86,13 +86,13 @@ def deposit():
     if result:
         current_balance = result[0]
         new_balance = current_balance + amount
-        sql_update = "UPDATE create_account SET balance = %s WHERE `User ID` = %s"
+        sql_update = "UPDATE create_account SET `balance` = %s WHERE `User ID` = %s"
         val = (new_balance, user_id)
         cursor.execute(sql_update, val)
         connection.commit()
         print("Deposit successful. New balance: {:.2f}".format(new_balance))
     else:
-        print("Account with the specified user ID does not exist.")
+        print("Account with the specified account number does not exist.")
 
     # Close cursor and connection
     cursor.close()
@@ -113,7 +113,7 @@ def withdraw():
         if current_balance >= amount:
             new_balance = current_balance - amount
             # Execute SQL query to update account balance
-            sql_update = "UPDATE create_account SET balance = %s WHERE `User ID` = %s"
+            sql_update = "UPDATE create_account SET `balance` = %s WHERE `User ID` = %s"
             val = (new_balance, user_id)
             cursor.execute(sql_update, val)
             connection.commit()
@@ -121,42 +121,43 @@ def withdraw():
         else:
             print("Insufficient funds.")
     else:
-        print("Account with the specified user ID does not exist.")
+        print("Account with the specified account number does not exist.")
 
     # Close cursor and connection
     cursor.close()
 
 def main_menu():
-    print("Welcome to our application!")
-    print("Main Menu:")
-    print("1. Create an account")
-    print("2. Delete an account")
-    print("3. Modify an account")
-    print("4. Deposit an amount into an account")
-    print("5. Withdraw an amount from an account")
-    print("6. Exit the app")
+    while True:
+        print("\nWelcome to our application!")
+        print("Main Menu:")
+        print("1. Create an account")
+        print("2. Delete an account")
+        print("3. Modify an account")
+        print("4. Deposit an amount into an account")
+        print("5. Withdraw an amount from an account")
+        print("6. Exit the app")
 
-    # Prompt user for choice
-    choice = input("Enter your choice (1-6): ")
+        # Prompt user for choice
+        choice = input("Enter your choice (1-6): ")
 
-    # Call corresponding function based on user's choice
-    if choice == '1':
-        create_account()
-    elif choice == '2':
-        delete_account()
-    elif choice == '3':
-        modify_account()
-    elif choice == '4':
-        deposit()
-    elif choice == '5':
-        withdraw()
-    elif choice == '6':
-        print("Exiting the application. Goodbye!")
-        # Close the database connection before exiting
-        connection.close()
-        exit()
-    else:
-        print("Invalid choice. Please enter a number from 1 to 6.")
+        # Call corresponding function based on user's choice
+        if choice == '1':
+            create_account()
+        elif choice == '2':
+            delete_account()
+        elif choice == '3':
+            modify_account()
+        elif choice == '4':
+            deposit()
+        elif choice == '5':
+            withdraw()
+        elif choice == '6':
+            print("Exiting the application. Goodbye!")
+            # Close the database connection before exiting
+            connection.close()
+            break
+        else:
+            print("Invalid choice. Please enter a number from 1 to 6.")
 
 if __name__ == "__main__":
     main_menu()
